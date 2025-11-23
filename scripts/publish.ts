@@ -45,6 +45,8 @@ const token = getArg(
 const packageName = getArg("name", process.env.npm_package_name);
 const nextVersion = getArg("next-version", process.env.WGW_NEXT_VERSION);
 
+console.log("token>>", { token });
+
 if (!nextVersion) {
   console.error("No next version found, skipping publish");
   process.exit(1);
