@@ -26,6 +26,7 @@ jobs:
       - uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2
         with:
           bun-version: "latest"
+          registry-url: "https://registry.npmjs.org/"
 
       - name: Cache ~/.bun/install
         id: cache-bun
@@ -41,6 +42,11 @@ jobs:
         id: install
         run: bun install --frozen-lockfile
         continue-on-error: false
+
+      - name: Setup npm auth
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
+
       - name: Releasing
         shell: bash
         env:
@@ -49,8 +55,9 @@ jobs:
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          echo $NEW_VERSION
           sed -i 's/"version": "[^"]*"/"version": "'"$NEW_VERSION"'"/' package.json
-          bun publish
+          bun publish --access public
         # run: |
         #   cat package.json
         #   bun ./scripts/test-bun-crypto.ts
