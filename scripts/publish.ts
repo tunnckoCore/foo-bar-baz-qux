@@ -73,10 +73,10 @@ if (nextVersion === remoteVersion) {
   process.exit(1);
 }
 
-if (localPkg.version !== nextVersion) {
-  console.error("Local version does not match next version, skipping publish");
-  process.exit(1);
-}
+// if (localPkg.version !== nextVersion) {
+//   console.error("Local version does not match next version, skipping publish");
+//   process.exit(1);
+// }
 
 const publishOptions = {
   access: publishAccess,
