@@ -49,5 +49,5 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           cat package.json
-          bunx pkg-pr-new publish --bun --compact --packageManager="bun"
+          # bunx pkg-pr-new publish --bun --compact --packageManager="bun"
           bun ./scripts/publish --next-version 3.0.2
