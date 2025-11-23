@@ -1,0 +1,39 @@
+name: ci
+
+on: [push, pull_request, workflow_dispatch]
+
+# Remove default permissions of GITHUB_TOKEN for security
+# https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  bruh:
+    name: Continues Releasing
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+      - uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2
+        with:
+          bun-version: "latest"
+
+      - name: Cache ~/.bun/install
+        id: cache-bun
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install
+          key: ${{ runner.os }}-bun-v1
+          restore-keys: |
+            ${{ runner.os }}-bun-v1
+
+      - name: Install dependencies
+        shell: bash
+        id: install
+        run: bun install --frozen-lockfile
+        continue-on-error: false
+      - name: Releasing
+        shell: bash
+        run: bunx pkg-pr-new publish --bun --compact --packageManager="bun"
