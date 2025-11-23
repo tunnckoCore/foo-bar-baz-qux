@@ -3,9 +3,6 @@
 import fs from "node:fs/promises";
 import pack from "libnpmpack";
 import libpub from "libnpmpublish";
-import semver from "semver";
-
-console.log(semver.inc(semver.parse("0.0.0-stable")));
 
 const localPkgStr = await fs.readFile("package.json", "utf-8");
 const localPkg = JSON.parse(localPkgStr);
@@ -40,7 +37,10 @@ const provenance = getArg(
 );
 const token = getArg(
   "token",
-  process.env.NPM_TOKEN || process.env.NODE_AUTH_TOKEN,
+  process.env.NPM_TOKEN ||
+    process.env.NODE_AUTH_TOKEN ||
+    process.env.GITHUB_TOKEN ||
+    process.env.GH_TOKEN,
 );
 const packageName = getArg("name", process.env.npm_package_name);
 const nextVersion = getArg("next-version", process.env.WGW_NEXT_VERSION);

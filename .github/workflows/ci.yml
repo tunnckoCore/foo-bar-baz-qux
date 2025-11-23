@@ -4,7 +4,9 @@ on: [push, pull_request, workflow_dispatch]
 
 # Remove default permissions of GITHUB_TOKEN for security
 # https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
-permissions: {}
+
+permissions:
+  contents: read # for checkout
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.sha }}
@@ -14,6 +16,11 @@ jobs:
   bruh:
     name: Continuous Releasing
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+      id-token: write # to enable use of OIDC for npm provenance
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2
@@ -39,3 +46,4 @@ jobs:
         run: |
           cat package.json
           bunx pkg-pr-new publish --bun --compact --packageManager="bun"
+          bun ./scripts/publish --next-version 3.0.2
