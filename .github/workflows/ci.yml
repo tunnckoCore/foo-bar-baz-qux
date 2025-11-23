@@ -46,8 +46,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH: ${{ secrets.NODE_AUTH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           cat package.json
-          # bunx pkg-pr-new publish --bun --compact --packageManager="bun"
-          bun ./scripts/publish --next-version 3.0.2
+          bun ./scripts/test-bun-crypto.ts
+          bun ./scripts/publish.ts --next-version 3.0.2

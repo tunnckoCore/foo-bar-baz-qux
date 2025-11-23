@@ -39,11 +39,14 @@ const token = getArg(
   "token",
   process.env.NPM_TOKEN ||
     process.env.NODE_AUTH_TOKEN ||
+    process.env.NODE_AUTH ||
     process.env.GITHUB_TOKEN ||
     process.env.GH_TOKEN,
 );
 const packageName = getArg("name", process.env.npm_package_name);
 const nextVersion = getArg("next-version", process.env.WGW_NEXT_VERSION);
+
+console.log("token length:", (token as any)?.length as any);
 
 if (!nextVersion) {
   console.error("No next version found, skipping publish");
