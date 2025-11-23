@@ -4,10 +4,7 @@
   "module": "index.ts",
   "type": "module",
   "main": "index.ts",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/tunnckoCore/foo-bar-baz-qux.git"
-  },
+  "repository": "tunnckoCore/foo-bar-baz-qux",
   "publishConfig": {
     "access": "public",
     "provenance": true
