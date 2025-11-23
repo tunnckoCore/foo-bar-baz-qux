@@ -105,7 +105,7 @@ console.info("Publishing package with provenance...", info);
 const localSourceTarball = await pack();
 const result = await libpub.publish(localPkg, localSourceTarball, {
   ...publishOptions,
-  // token,
+  token,
 });
 
 console.log("Publish result:", result);
