@@ -6,7 +6,7 @@
   "main": "index.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tunnckoCore/zagora.git"
+    "url": "https://github.com/tunnckoCore/foo-bar-baz-qux.git"
   },
   "publishConfig": {
     "access": "public",
