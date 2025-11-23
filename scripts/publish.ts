@@ -39,7 +39,7 @@ const token = getArg(
   "token",
   process.env.NPM_TOKEN ||
     process.env.NODE_AUTH_TOKEN ||
-    process.env.NODE_AUTH ||
+    process.env.NPM_CONFIG_TOKEN ||
     process.env.GITHUB_TOKEN ||
     process.env.GH_TOKEN,
 );

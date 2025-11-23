@@ -44,11 +44,14 @@ jobs:
       - name: Releasing
         shell: bash
         env:
+          NEW_VERSION: "3.0.2"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH: ${{ secrets.NODE_AUTH_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_CONFIG_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cat package.json
-          bun ./scripts/test-bun-crypto.ts
-          bun ./scripts/publish.ts --next-version 3.0.2
+          sed -i 's/"version": "[^"]*"/"version": "'"$NEW_VERSION"'"/' package.json
+          bun publish
+        # run: |
+        #   cat package.json
+        #   bun ./scripts/test-bun-crypto.ts
+        #   bun ./scripts/publish.ts --next-version 3.0.2
