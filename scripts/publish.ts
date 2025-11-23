@@ -50,10 +50,10 @@ if (!nextVersion) {
   process.exit(1);
 }
 
-if (!token) {
-  console.error("No token found, skipping publish");
-  process.exit(1);
-}
+// if (!token) {
+//   console.error("No token found, skipping publish");
+//   process.exit(1);
+// }
 
 if (!packageName) {
   console.error(
@@ -103,7 +103,7 @@ console.info("Publishing package with provenance...", info);
 const localSourceTarball = await pack();
 const result = await libpub.publish(localPkg, localSourceTarball, {
   ...publishOptions,
-  token,
+  // token,
 });
 
 console.log("Publish result:", result);
