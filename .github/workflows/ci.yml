@@ -55,7 +55,7 @@ jobs:
 
       - name: Publish
         env:
-          NEW_VERSION: "3.0.9"
+          NEW_VERSION: "3.0.10"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
