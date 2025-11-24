@@ -1,6 +1,6 @@
 {
   "name": "foo-bar-baz-qux",
-  "version": "3.0.5",
+  "version": "0.0.0-semantically-released",
   "module": "index.ts",
   "type": "module",
   "main": "index.ts",
