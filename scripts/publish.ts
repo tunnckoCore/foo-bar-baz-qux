@@ -37,11 +37,12 @@ const provenance = getArg(
 );
 const token = getArg(
   "token",
-  process.env.NPM_TOKEN ||
-    process.env.NODE_AUTH_TOKEN ||
-    process.env.NPM_CONFIG_TOKEN ||
-    process.env.GITHUB_TOKEN ||
-    process.env.GH_TOKEN,
+  process.env.GITHUB_TOKEN,
+  // process.env.NPM_TOKEN ||
+  //   process.env.NODE_AUTH_TOKEN ||
+  //   process.env.NPM_CONFIG_TOKEN ||
+  //   process.env.GITHUB_TOKEN ||
+  //   process.env.GH_TOKEN,
 );
 const packageName = getArg("name", process.env.npm_package_name);
 const nextVersion = getArg("next-version", process.env.WGW_NEXT_VERSION);
