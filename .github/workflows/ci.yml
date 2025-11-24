@@ -64,7 +64,7 @@ jobs:
         run: |
           echo $NEW_VERSION
           sed -i 's/"version": "[^"]*"/"version": "'"$NEW_VERSION"'"/' package.json
-          node ./scripts/publish.ts
+          node ./scripts/publish.ts --next-version $NEW_VERSION
 
     # steps:
     #   - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
