@@ -22,43 +22,68 @@ jobs:
       pull-requests: write # to be able to comment on released pull requests
       id-token: write # to enable use of OIDC for npm provenance
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
-      - uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2
-        with:
-          bun-version: "latest"
-          registry-url: "https://registry.npmjs.org/"
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Cache ~/.bun/install
-        id: cache-bun
-        uses: actions/cache@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
         with:
-          path: ~/.bun/install
-          key: ${{ runner.os }}-bun-v1
-          restore-keys: |
-            ${{ runner.os }}-bun-v1
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
 
       - name: Install dependencies
-        shell: bash
-        id: install
-        run: bun install --frozen-lockfile
-        continue-on-error: false
+        run: pnpm install --frozen-lockfile
 
-      # - name: Setup npm auth
-      #   run: |
-      #     echo "//registry.npmjs.org/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
-      - name: Releasing
-        shell: bash
+      - name: Publish
+        run: pnpm publish
         env:
-          NEW_VERSION: "3.1.0"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_TOKEN: ${{ secrets.NPM_CONFIG_TOKEN }}
-        run: |
-          echo $NEW_VERSION
-          sed -i 's/"version": "[^"]*"/"version": "'"$NEW_VERSION"'"/' package.json
-          bunx npm publish --access public
-        # run: |
-        #   cat package.json
-        #   bun ./scripts/test-bun-crypto.ts
-        #   bun ./scripts/publish.ts --next-version 3.0.2
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    # steps:
+    #   - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+    #   - uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2
+    #     with:
+    #       bun-version: "latest"
+    #       registry-url: "https://registry.npmjs.org/"
+
+    #   - name: Cache ~/.bun/install
+    #     id: cache-bun
+    #     uses: actions/cache@v4
+    #     with:
+    #       path: ~/.bun/install
+    #       key: ${{ runner.os }}-bun-v1
+    #       restore-keys: |
+    #         ${{ runner.os }}-bun-v1
+
+    #   - name: Install dependencies
+    #     shell: bash
+    #     id: install
+    #     run: bun install --frozen-lockfile
+    #     continue-on-error: false
+
+    #   - name: Setup npm auth
+    #     run: |
+    #       echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+    #   - name: Releasing
+    #     shell: bash
+    #     env:
+    #       NEW_VERSION: "3.1.0"
+    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #       NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+    #       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    #       NPM_CONFIG_TOKEN: ${{ secrets.NPM_CONFIG_TOKEN }}
+    #     run: |
+    #       echo $NEW_VERSION
+    #       sed -i 's/"version": "[^"]*"/"version": "'"$NEW_VERSION"'"/' package.json
+    #       bunx npm publish --access public
+    #     # run: |
+    #     #   cat package.json
+    #     #   bun ./scripts/test-bun-crypto.ts
+    #     #   bun ./scripts/publish.ts --next-version 3.0.2
