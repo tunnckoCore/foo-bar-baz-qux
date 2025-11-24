@@ -43,21 +43,20 @@ jobs:
         run: bun install --frozen-lockfile
         continue-on-error: false
 
-      - name: Setup npm auth
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
-
+      # - name: Setup npm auth
+      #   run: |
+      #     echo "//registry.npmjs.org/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
       - name: Releasing
         shell: bash
         env:
-          NEW_VERSION: "3.0.2"
+          NEW_VERSION: "3.1.0"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo $NEW_VERSION
           sed -i 's/"version": "[^"]*"/"version": "'"$NEW_VERSION"'"/' package.json
-          bun publish --access public
+          bunx npm publish --access public
         # run: |
         #   cat package.json
         #   bun ./scripts/test-bun-crypto.ts
