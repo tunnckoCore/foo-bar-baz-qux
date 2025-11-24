@@ -1,12 +1,12 @@
 {
-  "name": "foo-bar-baz-qux",
-  "version": "3.0.10",
+  "name": "@tunnckocore/foo-bar-baz-qux",
+  "version": "0.1.0",
   "module": "index.ts",
   "type": "module",
   "main": "index.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tunnckoCore/foo-bar-baz-qux.git"
+    "url": "git+https://github.com/tunnckoCore/foo-bar-baz-qux.git"
   },
   "publishConfig": {
     "access": "public",
