@@ -33,15 +33,17 @@ jobs:
       # - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
       #   run: npm audit signatures
       - name: Pack
-        run: bun pm pack
+        id: pack
+        run: |
+          bun pm pack
+          PACKED_FILE=$(ls *.tgz | head -n1)
+          echo "pkgfile=$PACKED_FILE" >> "$GITHUB_OUTPUT"
       - name: Generate Build Provenance
         uses: actions/attest-build-provenance@v1
         with:
-          subject-path: "*.tgz"
+          subject-path: ${{ steps.pack.outputs.pkgfile }}
 
       - name: Publish to NPM Registry
-        run: bunx npm publish
+        run: bunx npm publish "./${{ steps.pack.outputs.pkgfile }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
