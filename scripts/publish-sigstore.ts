@@ -21,7 +21,7 @@ async function main() {
   // Sign with Cosign CLI (handles OIDC, Fulcio, Rekor)
   const cosign = spawn(
     "./cosign",
-    ["sign-blob", "package.tgz", "--bundle", "provenance.bundle.json"],
+    ["sign-blob", "package.tgz", "--bundle", "provenance.bundle.json", "--yes"],
     {
       stdio: "inherit",
     }
