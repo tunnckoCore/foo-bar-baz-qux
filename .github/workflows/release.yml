@@ -17,6 +17,7 @@ jobs:
       issues: write # to be able to comment on released issues
       pull-requests: write # to be able to comment on released pull requests
       id-token: write # to enable use of OIDC for trusted publishing and npm provenance
+      attestations: write # to generate build provenance attestations
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,14 +26,15 @@ jobs:
       - uses: oven-sh/setup-bun@v2 # v2
         with:
           bun-version: "latest"
-      - name: Install Cosign CLI
-        run: |
-          curl -L https://github.com/sigstore/cosign/releases/download/v2.2.4/cosign-linux-amd64 -o cosign
-          chmod +x cosign
       - name: Install dependencies
         run: bun install
+      - name: Testing
+        run: bun run build
       # - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
       #   run: npm audit signatures
-      - name: Release
-        run: |
-          bun run scripts/publish-sigstore.ts
+      - name: Pack
+        run: bun pm pack
+      - name: Generate Build Provenance
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: "*.tgz"
