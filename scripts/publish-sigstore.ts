@@ -1,9 +1,8 @@
 #!/usr/bin/env bun
 
-import { createHash } from "node:crypto";
+import { spawn } from "child_process";
 import fs from "node:fs/promises";
 import pack from "libnpmpack";
-import { sign } from "sigstore";
 
 async function main() {
   if (!process.env.CI) {
@@ -15,39 +14,34 @@ async function main() {
   const tarball = await pack();
   console.log("Packed tarball");
 
-  // Calculate hash
-  const hash = createHash("sha256").update(tarball).digest("hex");
-  console.log("SHA256:", hash);
+  // Save tarball
+  await fs.writeFile("package.tgz", tarball);
+  console.log("Tarball saved as package.tgz");
 
-  // Sign with Sigstore (uses OIDC from CI)
-  const bundle = await sign(tarball);
-  const bundleJson = JSON.stringify(bundle, null, 2);
-  console.log("Signed and bundled:", bundleJson);
-
-  // Submit to Rekor
-  const response = await fetch(
-    "https://rekor.sigstore.dev/api/v1/log/entries",
+  // Sign with Sigstore CLI (handles OIDC, Fulcio, Rekor)
+  const sigstore = spawn(
+    "./sigstore",
+    ["sign", "package.tgz", "--output", "provenance.bundle.json"],
     {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        kind: "hashedrekord",
-        apiVersion: "0.0.1",
-        spec: bundle,
-      }),
+      stdio: "inherit",
     }
   );
-  if (!response.ok) {
-    throw new Error(`Failed to submit to Rekor: ${response.statusText}`);
-  }
-  const entry = await response.json();
-  console.log("Submitted to Rekor:", entry.logIndex);
 
-  // Optionally save bundle
-  await fs.writeFile("provenance.bundle.json", bundleJson);
-  console.log("Bundle saved to provenance.bundle.json");
+  sigstore.on("close", async (code) => {
+    if (code === 0) {
+      const file = Bun.file("provenance.bundle.json");
+      const bundle = await file.text();
+
+      console.log("Bundle:", JSON.stringify(JSON.parse(bundle), null, 2));
+      console.log("");
+      console.log(
+        "Signed and submitted to Rekor. Bundle saved to provenance.bundle.json"
+      );
+    } else {
+      console.error("Sigstore CLI failed");
+      process.exit(1);
+    }
+  });
 }
 
 main().catch(console.error);
