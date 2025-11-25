@@ -18,16 +18,16 @@ async function main() {
   await fs.writeFile("package.tgz", tarball);
   console.log("Tarball saved as package.tgz");
 
-  // Sign with Sigstore CLI (handles OIDC, Fulcio, Rekor)
-  const sigstore = spawn(
-    "./sigstore",
-    ["sign", "package.tgz", "--output", "provenance.bundle.json"],
+  // Sign with Cosign CLI (handles OIDC, Fulcio, Rekor)
+  const cosign = spawn(
+    "./cosign",
+    ["sign-blob", "package.tgz", "--bundle", "provenance.bundle.json"],
     {
       stdio: "inherit",
     }
   );
 
-  sigstore.on("close", async (code) => {
+  cosign.on("close", async (code) => {
     if (code === 0) {
       const file = Bun.file("provenance.bundle.json");
       const bundle = await file.text();
