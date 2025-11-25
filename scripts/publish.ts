@@ -18,7 +18,7 @@ if (!process.env.CI) {
 
 function getArg(
   arg: string,
-  defaultValue?: string | boolean,
+  defaultValue?: string | boolean
 ): string | boolean | undefined {
   return process.argv.find((x) => x === `--${arg}`)
     ? arg === "debug" || arg === "dry-run" || arg === "provenance"
@@ -33,11 +33,11 @@ const publishAccess = getArg("access", "public");
 const publishTag = getArg("tag", "latest");
 const provenance = getArg(
   "provenance",
-  localPkg?.publishConfig?.provenance ?? true,
+  localPkg?.publishConfig?.provenance ?? true
 );
 const token = getArg(
   "token",
-  process.env.GITHUB_TOKEN,
+  process.env.GITHUB_TOKEN
   // process.env.NPM_TOKEN ||
   //   process.env.NODE_AUTH_TOKEN ||
   //   process.env.NPM_CONFIG_TOKEN ||
@@ -61,13 +61,13 @@ if (!nextVersion) {
 
 if (!packageName) {
   console.error(
-    "No package name found, maybe not ran from package scripts? Try passing --name <package-name>",
+    "No package name found, maybe not ran from package scripts? Try passing --name <package-name>"
   );
   process.exit(1);
 }
 
 const remoteVersion = await fetch(
-  `https://unpkg.com/${packageName}/package.json`,
+  `https://unpkg.com/${packageName}/package.json`
 )
   .then((x) => x.json())
   .then((x) => x.version);

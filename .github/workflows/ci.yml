@@ -16,7 +16,12 @@ jobs:
           bun-version: "latest"
 
       - run: bun install
-      - run: bun run start
+      - run: bun run build
+      - run: bunx npm publish
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       # - name: Code coverage with Codecov
       #   uses: codecov/codecov-action@ad3126e916f78f00edff4ed0317cf185271ccc2d # v5
       #   with:
