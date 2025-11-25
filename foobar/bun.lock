@@ -6,7 +6,7 @@
       "name": "foobar",
       "dependencies": {
         "@hono/hono": "npm:@jsr/hono__hono@4.6",
-        "@tunnckocore/foo-bar-baz-qux": "npm:@jsr/tunnckocore__foo-bar-baz-qux@^0.2",
+        "@tunnckocore/foo-bar-baz-qux": "npm:@jsr/tunnckocore__foo-bar-baz-qux@^0.3",
       },
       "devDependencies": {
         "@types/bun": "latest",
@@ -19,7 +19,7 @@
   "packages": {
     "@hono/hono": ["@jsr/hono__hono@4.6.20", "https://npm.jsr.io/~/11/@jsr/hono__hono/4.6.20.tgz", {}, "sha512-8y8MD+QXLvPkbjTgsjuQRVtSDUk1DlGTmerVOmzoJZfvSx3pBEUx70ZdYk41Z+XatbMoK1IxkanFruFvKrdVrg=="],
 
-    "@tunnckocore/foo-bar-baz-qux": ["@jsr/tunnckocore__foo-bar-baz-qux@0.2.0", "https://npm.jsr.io/~/11/@jsr/tunnckocore__foo-bar-baz-qux/0.2.0.tgz", {}, "sha512-C3Djpc2hHFpDXYavlsguxtlvCQDq6OktafP46c5jP3UiRYcowwXedNcWtPoru2ZUZtdTxrlLCsgUKX2uu4KkQg=="],
+    "@tunnckocore/foo-bar-baz-qux": ["@jsr/tunnckocore__foo-bar-baz-qux@0.3.2", "https://npm.jsr.io/~/11/@jsr/tunnckocore__foo-bar-baz-qux/0.3.2.tgz", {}, "sha512-piiFmOJTF7cCCC8FXqVpbU8r4rIVx7w2kwEV/zfJE9GSMukpRimUeNC8esx4rZX/FVOEDpouzhmBnqjeVvLxfA=="],
 
     "@types/bun": ["@types/bun@1.3.3", "", { "dependencies": { "bun-types": "1.3.3" } }, "sha512-ogrKbJ2X5N0kWLLFKeytG0eHDleBYtngtlbu9cyBKFtNL3cnpDZkNdQj8flVf6WTZUX5ulI9AY1oa7ljhSrp+g=="],
 
