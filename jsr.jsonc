@@ -1,6 +1,10 @@
 {
   "name": "@tunnckocore/foo-bar-baz-qux",
   "license": "MIT",
-  "version": "0.2.0",
-  "exports": "./index.ts"
+  "version": "0.3.0",
+  "exports": "./index.ts",
+  "publish": {
+    "include": ["index.ts"]
+  },
+  "$schema": "https://jsr.io/schema/config-file.v1.json"
 }
