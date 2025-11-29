@@ -21,7 +21,7 @@ jobs:
       - run: bun run build
       - name: Enable Immutable Releases
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GHTCK_PAT_ADMIN_SCOPE_TOKEN }}
           # GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
         run: |
           echo "Repo is... $GITHUB_REPOSITORY"
