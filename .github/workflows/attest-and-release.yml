@@ -1,0 +1,66 @@
+name: Attest & Release
+
+on:
+  workflow_run:
+    workflows: ["Build & Push"]
+    types: [completed]
+    branches: [release/v*, release/latest]
+
+permissions:
+  contents: write
+  attestations: write
+  id-token: write
+
+jobs:
+  attest-and-release:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Version from Branch
+        run: |
+          BRANCH_NAME=${{ github.ref_name }}
+          if [[ $BRANCH_NAME == release/latest ]]; then
+            RELEASE_VER=latest
+          else
+            RELEASE_VER=$(echo $BRANCH_NAME | sed 's/release\/v//')
+          fi
+          echo "RELEASE_VER=$RELEASE_VER" >> $GITHUB_ENV
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: oven-sh/setup-bun@v2
+      - name: Pack Package Artifacts
+        run: bun pm pack
+      - name: Attest Provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: "*.tgz"
+      - name: Download Attestation
+        run: gh attestation download "*.tgz" --format json > sigstore-provenance-${{ env.RELEASE_VER }}.json
+      - name: Create Tag
+        run: |
+          if [[ ${{ env.RELEASE_VER }} == latest ]]; then
+            git tag latest --force
+          else
+            git tag v${{ env.RELEASE_VER }}
+          fi
+      - name: Create Release and Upload Assets
+        run: |
+          if [[ ${{ env.RELEASE_VER }} == latest ]]; then
+            gh release create latest "*.tgz" sigstore-provenance-*.json \
+              --title "Latest Release" \
+              --notes 'Usage: `npm install github:${{ env.GITHUB_REPOSITORY }}#latest`'
+          else
+            gh release create v${{ env.RELEASE_VER }} "*.tgz" sigstore-provenance-*.json \
+              --title "Release v${{ env.RELEASE_VER }}" \
+              --notes 'Usage: `npm install github:${{ env.GITHUB_REPOSITORY }}#v${{ env.RELEASE_VER }}`'
+          fi
+      - name: Push Tag
+        run: |
+          if [[ ${{ env.RELEASE_VER }} == latest ]]; then
+            git push origin latest --force
+          else
+            git push origin v${{ env.RELEASE_VER }}
+          fi
+      # - name: Enable Immutable Releases
+      #   run: gh api repos/${{ env.GITHUB_REPOSITORY }}/immutable-releases --method PUT

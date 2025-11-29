@@ -1,0 +1,35 @@
+name: Build & Push
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+      # - run: bun run test
+      - run: bun run build
+      - name: Enable Immutable Releases
+        run: gh api repos/${{ env.GITHUB_REPOSITORY }}/immutable-releases --method PUT
+      # - name: Get version
+      #   id: get_version
+      #   run: echo "version=$(jq -r .version package.json)" >> $GITHUB_OUTPUT
+      # - name: Create & Push Version Branch
+      #   run: |
+      #     git checkout -b release/v${{ steps.get_version.outputs.version }}
+      #     git add dist/ package.json
+      #     git commit -m "Release v${{ steps.get_version.outputs.version }}"
+      #     git push origin release/v${{ steps.get_version.outputs.version }}
+      # - name: Create & Push Latest Branch
+      #   run: |
+      #     git checkout master
+      #     git checkout -b release/latest
+      #     git add dist/ package.json
+      #     git commit -m "Update latest release"
+      #     git push origin release/latest --force
