@@ -21,7 +21,7 @@ jobs:
       - run: bun run build
       - name: Enable Immutable Releases
         env:
-          GH_TOKEN: ${{ env.GITHUB_PERSONAL_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ env.GHTCK_PERSONAL_ACCESS_TOKEN }}
           # GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
         run: gh api "repos/$GITHUB_REPOSITORY/immutable-releases" --method PUT
       # - name: Get version
