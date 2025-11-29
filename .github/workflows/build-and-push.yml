@@ -20,6 +20,8 @@ jobs:
       # - run: bun run test
       - run: bun run build
       - name: Enable Immutable Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: gh api repos/${{ env.GITHUB_REPOSITORY }}/immutable-releases --method PUT
       # - name: Get version
       #   id: get_version
